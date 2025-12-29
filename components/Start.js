@@ -1,16 +1,24 @@
 // Import necessary React and React Native components
 import { useState } from 'react';
 import {
+  Alert,
+  ImageBackground,
+  KeyboardAvoidingView, // Added for keyboard handling
+  Platform, // Added for platform detection
   StyleSheet,
-  View,
   Text,
   TextInput,
-  ImageBackground,
   TouchableOpacity,
-  Alert,
+  View,
 } from 'react-native';
 
-// Start screen component - where users enter their name and choose a background color
+/**
+ * Start Screen Component
+ * Entry point where users enter their name and choose a background color
+ * before entering the chat
+ *
+ * @param {Object} navigation - Navigation object for screen transitions
+ */
 const Start = ({ navigation }) => {
   // State to store the user's name input
   const [name, setName] = useState('');
@@ -30,7 +38,7 @@ const Start = ({ navigation }) => {
       {/* Main content container */}
       <View style={styles.contentContainer}>
         {/* App title */}
-        <Text style={styles.title}>Ping</Text>
+        <Text style={styles.title}>Chat App</Text>
 
         {/* White box containing the input and color selection */}
         <View style={styles.inputContainer}>
@@ -41,6 +49,9 @@ const Start = ({ navigation }) => {
             onChangeText={setName} // Updates name state as user types
             placeholder="Your name"
             placeholderTextColor="#75708388" // 50% opacity as per design specs
+            accessible={true}
+            accessibilityLabel="Your name"
+            accessibilityHint="Enter your name to display in chat"
           />
 
           {/* Section for choosing background color */}
@@ -62,6 +73,7 @@ const Start = ({ navigation }) => {
                   onPress={() => setBackground(color)} // Update selected color
                   accessible={true}
                   accessibilityLabel={`Background color ${color}`}
+                  accessibilityHint="Tap to select this background color for your chat"
                   accessibilityRole="button"
                 />
               ))}
@@ -85,12 +97,22 @@ const Start = ({ navigation }) => {
             }}
             accessible={true}
             accessibilityLabel="Start chatting"
+            accessibilityHint="Navigates to the chat screen"
             accessibilityRole="button"
           >
             <Text style={styles.buttonText}>Start Chatting</Text>
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* 
+        iOS Keyboard Fix
+        Prevents keyboard from covering the form on iOS devices
+        Only applies to iOS platform
+      */}
+      {Platform.OS === 'ios' ? (
+        <KeyboardAvoidingView behavior="padding" />
+      ) : null}
     </ImageBackground>
   );
 };
